@@ -1,26 +1,43 @@
+
+import java.util.ArrayList;
+
 public class Util {
     
     public static void main(String[] args) {
-        System.out.println(converteMensagem("Alguma coisa!"));
+        ArrayList<String> fraseBinaria = converteMensagem("Alguma Coisa muuuuuuuuito massa!");
+        System.out.println(fraseBinaria.toString());
     }
     
     
-    public static String converteMensagem(String mensagem){
-        String s = "";
-        for(int i=0; i<mensagem.length(); i++){
-            int n = (int) mensagem.charAt(i);
-            String aux = Integer.toBinaryString(n);
-            while(aux.length()<8)
-                aux = "0"+aux;
-            s += aux+" ";
+    public static ArrayList<String> converteMensagem(String mensagem){
+        ArrayList<String> fraseBinaria = new ArrayList<>();
+        String[] vetor = mensagem.split(" ");
+        for(int i=0; i<vetor.length; i++){
+            String palavra = "";
+            for(int j=0; j<vetor[i].length(); j++){
+                int n = (int) vetor[i].charAt(j);
+                String aux = Integer.toBinaryString(n);
+                while(aux.length()<8)
+                    aux = "0"+aux;
+                palavra += aux+"";
+            }
+            fraseBinaria.add(palavra);
         }
-        return s;
+        return fraseBinaria;
     }
     
-    public static boolean checkSum(String mensagem){
-        
-        
-        return true;
+    public static ArrayList<String> addCheckSum(ArrayList<String> mensagem){
+        long soma = 0;
+        for(int i=0; i<mensagem.size(); i++){
+            Long l = Long.parseLong(mensagem.get(i), 2);
+            soma += l;
+        }
+        // Maior valor de soma possível: 9223372036854775807;
+        //System.out.println("SUM: "+Long.toBinaryString(soma));
+        mensagem.add(Long.toBinaryString(~soma));
+        return mensagem;
     }
     
+    
+   
 }

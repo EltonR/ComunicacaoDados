@@ -21,6 +21,7 @@ public class EnviarMensagemAoCliente implements Runnable{
                 //pega o input do usuário
                 BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
                 String mensagem = input.readLine();
+                
 
                 //Envia a mensagem e esvazia o printWriter
                 printWriter.println(mensagem);
