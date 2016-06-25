@@ -10,8 +10,7 @@ public class Util {
     }
     
     public static String calculaCRC(String s){
-        while(s.startsWith("0"))
-            s=s.substring(1);
+        
         s += "0000000000000000";
         String resto="";
         while(s.length()>0){
@@ -31,41 +30,40 @@ public class Util {
                     return resto;
                 }
                 String resto2="";
-                System.out.println("S: "+s);
-                System.out.println("D: "+gerador16);
-                System.out.println("D: "+resto);
+//                System.out.println("S: "+s);
+//                System.out.println("D: "+gerador16);
+//                System.out.println("D: "+resto);
                 for(int i=0; i<16; i++){
                     if(resto.charAt(i) == gerador16.charAt(i))
                         resto2 += "0";
                     else
                         resto2 += "1";
                 }
-                System.out.println("R: "+resto2);
+//                System.out.println("R: "+resto2);
                 while(resto2.startsWith("0"))
                     resto2 = resto2.substring(1);
                 resto = resto2;
             }else{
-                System.out.println("S: "+s);
-                System.out.println("D: "+gerador16);
+//                System.out.println("S: "+s);
+//                System.out.println("D: "+gerador16);
                 for(int i=0; i<16; i++){
                     if(s.charAt(i) == gerador16.charAt(i))
                         resto += "0";
                     else
                         resto += "1";
                 }
-                System.out.println("R: "+resto);
+//                System.out.println("R: "+resto);
                 while(resto.startsWith("0"))
                     resto = resto.substring(1);
                 s = s.substring(resto.length());
             }
-            System.out.println("");
+//            System.out.println("");
         }
         return resto;
     }
     
     public static String descalculaCRC(String s){
-        while(s.startsWith("0"))
-            s=s.substring(1);
+        
         String resto="";
         while(s.length()>0){
             if(!resto.equalsIgnoreCase("")){
@@ -79,16 +77,16 @@ public class Util {
                     s=s.substring(1);
                 }
                 String resto2="";
-                System.out.println("S: "+s);
-                System.out.println("D: "+gerador16);
-                System.out.println("D: "+resto);
+//                System.out.println("S: "+s);
+//                System.out.println("D: "+gerador16);
+//                System.out.println("D: "+resto);
                 for(int i=0; i<16; i++){
                     if(resto.charAt(i) == gerador16.charAt(i))
                         resto2 += "0";
                     else
                         resto2 += "1";
                 }
-                System.out.println("R: "+resto2);
+//                System.out.println("R: "+resto2);
                 while(resto2.startsWith("0"))
                     resto2 = resto2.substring(1);
                 resto = resto2;
@@ -96,20 +94,20 @@ public class Util {
                 if(s.replaceAll("0", "").length() == 0){
                     return "0000000000000000";
                 }
-                System.out.println("S: "+s);
-                System.out.println("D: "+gerador16);
+//                System.out.println("S: "+s);
+//                System.out.println("D: "+gerador16);
                 for(int i=0; i<16; i++){
                     if(s.charAt(i) == gerador16.charAt(i))
                         resto += "0";
                     else
                         resto += "1";
                 }
-                System.out.println("R: "+resto);
+//                System.out.println("R: "+resto);
                 while(resto.startsWith("0"))
                     resto = resto.substring(1);
                 s = s.substring(resto.length());
             }
-            System.out.println("");
+//            System.out.println("");
         }
         return resto;
     }
