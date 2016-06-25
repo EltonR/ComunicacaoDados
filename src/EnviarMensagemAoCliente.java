@@ -22,11 +22,19 @@ public class EnviarMensagemAoCliente implements Runnable{
                 BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
                 String mensagem = input.readLine();
                 
-
+                String[] frames = mensagem.split(" ");
+                String quadro;
+                for(int i=0; i<frames.length; i++){
+                    
+                    quadro = Util.converteStrBin(frames[i]);
+                    quadro += Util.calculaCRC(quadro);
+                    System.out.println("FRAME ["+i+"]: "+frames[i]+"  >> "+quadro);
+                    
+                    printWriter.println(quadro);
+                    printWriter.flush();
+                }
                 //Envia a mensagem e esvazia o printWriter
-                printWriter.println(mensagem);
                 printWriter.flush();
-                System.out.println("Escreva algo para retornar ao cliente: ");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -16,8 +16,10 @@ public class ReceberMensagemDoServidor implements Runnable{
             recieve = new BufferedReader(new InputStreamReader(this.sock.getInputStream()));//get inputstream
             String msgRecieved = null;
             while ((msgRecieved = recieve.readLine()) != null) {
-                System.out.println("From Server: " + msgRecieved);
-                System.out.println("Please enter something to send to server..");
+                if(Util.descalculaCRC(msgRecieved).equalsIgnoreCase("0000000000000000"))
+                    System.out.println("[CLIENTE] Quadro recebido: "+Util.converteBinStr(msgRecieved.substring(0,msgRecieved.length()-16)));
+                else
+                    System.out.println("[CLIENTE] Erro ao receber algum quadro...");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
