@@ -28,12 +28,15 @@ public class EnviarMensagemAoCliente implements Runnable{
                     
                     quadro = Util.converteStrBin(frames[i]);
                     quadro += Util.calculaCRC(quadro);
+                    quadro = Util.escapaMensagem(quadro);
+                    quadro = Util.flag + quadro + Util.flag;
+                    
                     System.out.println("FRAME ["+i+"]: "+frames[i]+"  >> "+quadro);
                     
                     printWriter.println(quadro);
                     printWriter.flush();
                 }
-                //Envia a mensagem e esvazia o printWriter
+                
                 printWriter.flush();
             }
         } catch (Exception e) {

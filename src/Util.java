@@ -4,9 +4,15 @@ import java.util.ArrayList;
 public class Util {
     
     final private static String gerador16 = "1000100000010001";
+    //final public static String flag = "10100011"; // £
+    final public static String flag = "01000000"; // @
+    //final public static String escape = "10100010"; // ¢
+    final public static String escape = "00100011"; // #
+    
 
     public static void main(String[] args) {
-
+        String s = "0123456789";
+        System.out.println(s.substring(8));
     }
     
     public static String calculaCRC(String s){
@@ -134,16 +140,29 @@ public class Util {
         return str;
     }
 
-    public static ArrayList<String> addCheckSum(ArrayList<String> mensagem) {
-        long soma = 0;
-        for (int i = 0; i < mensagem.size(); i++) {
-            Long l = Long.parseLong(mensagem.get(i), 2);
-            soma += l;
-        }
-        // Maior valor de soma possível: 9223372036854775807;
-        //System.out.println("SUM: "+Long.toBinaryString(soma));
-        mensagem.add(Long.toBinaryString(~soma));
+    public static String escapaMensagem(String mensagem){
+        if(mensagem.contains(escape))
+            mensagem = mensagem.replaceAll(escape, escape+escape);
+        if(mensagem.contains(flag))
+            mensagem = mensagem.replaceAll(flag, escape+flag);
+        return mensagem;
+    }
+    
+    public static String desescapaMensagem(String mensagem){
+        if(mensagem.contains(escape+flag))
+            mensagem = mensagem.replaceAll(escape+flag, flag);
+        if(mensagem.contains(escape+escape))
+            mensagem = mensagem.replaceAll(escape+escape, escape);
         return mensagem;
     }
 
+    public static String desflagaMensagem(String mensagem){
+        if(mensagem.startsWith(flag) && mensagem.endsWith(flag)){
+            mensagem = mensagem.substring(8);
+            mensagem = mensagem.substring(0, mensagem.length()-8);
+        }else{
+            return "-";
+        }
+        return mensagem;
+    }
 }

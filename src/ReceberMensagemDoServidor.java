@@ -14,15 +14,20 @@ public class ReceberMensagemDoServidor implements Runnable{
     public void run() {
         try {
             recieve = new BufferedReader(new InputStreamReader(this.sock.getInputStream()));//get inputstream
-            String msgRecieved = null;
-            while ((msgRecieved = recieve.readLine()) != null) {
-                if(Util.descalculaCRC(msgRecieved).equalsIgnoreCase("0000000000000000"))
-                    System.out.println("[CLIENTE] Quadro recebido: "+Util.converteBinStr(msgRecieved.substring(0,msgRecieved.length()-16)));
+            String quadro = null;
+            while ((quadro = recieve.readLine()) != null) {
+                System.out.println("FRAME: "+quadro);
+                quadro = Util.desflagaMensagem(quadro);
+                System.out.println("FRAME desflagado: "+quadro);
+                quadro = Util.desescapaMensagem(quadro);
+                System.out.println("FRAME desescapado: "+quadro);
+                if(Util.descalculaCRC(quadro).equalsIgnoreCase("0000000000000000"))
+                    System.out.println("[CLIENTE] Quadro recebido: "+Util.converteBinStr(quadro.substring(0,quadro.length()-16)));
                 else
                     System.out.println("[CLIENTE] Erro ao receber algum quadro...");
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("ERRO: "+e.getMessage());
         }
     }
 }
