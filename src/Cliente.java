@@ -6,7 +6,9 @@ public class Cliente {
 
     public static void main(String[] args) {
         try {
+            System.out.println("Cliente no ar tentando conexão na porta: " + porta);
             Socket soquete = new Socket("localhost", porta);
+            System.out.println("Conexão estabelecida...");
             EnviarMensagemAoServidor enviar = new EnviarMensagemAoServidor(soquete);
             Thread thread = new Thread(enviar);
             thread.start();

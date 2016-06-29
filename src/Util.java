@@ -1,13 +1,14 @@
-
-import java.util.ArrayList;
-
 public class Util {
     
-    final private static String gerador16 = "1000100000010001";
+    final private static String GERADOR16 = "1000100000010001";
     //final public static String flag = "10100011"; // £
-    final public static String flag = "01000000"; // @
+    final public static String FLAG = "01000000"; // @
+    final public static String FLAG_ACK = "11111111";
     //final public static String escape = "10100010"; // ¢
-    final public static String escape = "00100011"; // #
+    final public static String ESCAPE = "00100011"; // #
+    //tamanho da janela
+    final public static int TAMJANELA = 4;
+    final public static int TIMEOUT = 10000000;
     
 
     public static void main(String[] args) {
@@ -40,7 +41,7 @@ public class Util {
 //                System.out.println("D: "+gerador16);
 //                System.out.println("D: "+resto);
                 for(int i=0; i<16; i++){
-                    if(resto.charAt(i) == gerador16.charAt(i))
+                    if(resto.charAt(i) == GERADOR16.charAt(i))
                         resto2 += "0";
                     else
                         resto2 += "1";
@@ -53,7 +54,7 @@ public class Util {
 //                System.out.println("S: "+s);
 //                System.out.println("D: "+gerador16);
                 for(int i=0; i<16; i++){
-                    if(s.charAt(i) == gerador16.charAt(i))
+                    if(s.charAt(i) == GERADOR16.charAt(i))
                         resto += "0";
                     else
                         resto += "1";
@@ -87,7 +88,7 @@ public class Util {
 //                System.out.println("D: "+gerador16);
 //                System.out.println("D: "+resto);
                 for(int i=0; i<16; i++){
-                    if(resto.charAt(i) == gerador16.charAt(i))
+                    if(resto.charAt(i) == GERADOR16.charAt(i))
                         resto2 += "0";
                     else
                         resto2 += "1";
@@ -103,7 +104,7 @@ public class Util {
 //                System.out.println("S: "+s);
 //                System.out.println("D: "+gerador16);
                 for(int i=0; i<16; i++){
-                    if(s.charAt(i) == gerador16.charAt(i))
+                    if(s.charAt(i) == GERADOR16.charAt(i))
                         resto += "0";
                     else
                         resto += "1";
@@ -141,23 +142,23 @@ public class Util {
     }
 
     public static String escapaMensagem(String mensagem){
-        if(mensagem.contains(escape))
-            mensagem = mensagem.replaceAll(escape, escape+escape);
-        if(mensagem.contains(flag))
-            mensagem = mensagem.replaceAll(flag, escape+flag);
+        if(mensagem.contains(ESCAPE))
+            mensagem = mensagem.replaceAll(ESCAPE, ESCAPE+ESCAPE);
+        if(mensagem.contains(FLAG))
+            mensagem = mensagem.replaceAll(FLAG, ESCAPE+FLAG);
         return mensagem;
     }
     
     public static String desescapaMensagem(String mensagem){
-        if(mensagem.contains(escape+flag))
-            mensagem = mensagem.replaceAll(escape+flag, flag);
-        if(mensagem.contains(escape+escape))
-            mensagem = mensagem.replaceAll(escape+escape, escape);
+        if(mensagem.contains(ESCAPE+FLAG))
+            mensagem = mensagem.replaceAll(ESCAPE+FLAG, FLAG);
+        if(mensagem.contains(ESCAPE+ESCAPE))
+            mensagem = mensagem.replaceAll(ESCAPE+ESCAPE, ESCAPE);
         return mensagem;
     }
 
     public static String desflagaMensagem(String mensagem){
-        if(mensagem.startsWith(flag) && mensagem.endsWith(flag)){
+        if(mensagem.startsWith(FLAG) && mensagem.endsWith(FLAG)){
             mensagem = mensagem.substring(8);
             mensagem = mensagem.substring(0, mensagem.length()-8);
         }else{
@@ -165,4 +166,43 @@ public class Util {
         }
         return mensagem;
     }
+    
+    public static String geraID(int i){
+        switch(i){
+            case 0:
+                return "0000";
+            case 1:
+                return "0001";
+            case 2:
+                return "0010";
+            case 3:
+                return "0011";
+            case 4:
+                return "0100";
+            case 5:
+                return "0101";
+            case 6:
+                return "0110";
+            case 7:
+                return "0111";
+            case 8:
+                return "1000";
+            case 9:
+                return "1001";
+            case 10:
+                return "1010";
+            case 11:
+                return "1011";
+            case 12:
+                return "1100";
+            case 13:
+                return "1101";
+            case 14:
+                return "1110";
+            case 15:
+                return "1111";
+        }
+        return null;
+    }
+    
 }

@@ -10,12 +10,13 @@ public class Servidor {
         ServerSocket soquete = new ServerSocket(porta);
         Socket soqueteCliente = soquete.accept();
         System.out.println("Cliente conectado: '" + soqueteCliente.getInetAddress() + "'");
-        //create two threads to send and recieve from client
-        ReceberMensagemDoCliente recebida = new ReceberMensagemDoCliente(soqueteCliente);
-        Thread thread = new Thread(recebida);
+        
+        //Cria duas threads, uma para receber otra para enviar
+        ReceberMensagemDoCliente receber = new ReceberMensagemDoCliente(soqueteCliente);
+        Thread thread = new Thread(receber);
         thread.start();
-        EnviarMensagemAoCliente send = new EnviarMensagemAoCliente(soqueteCliente);
-        Thread thread2 = new Thread(send);
+        EnviarMensagemAoCliente enviar = new EnviarMensagemAoCliente(soqueteCliente);
+        Thread thread2 = new Thread(enviar);
         thread2.start();
     }
 }
