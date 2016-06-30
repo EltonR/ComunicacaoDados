@@ -51,6 +51,7 @@ public class ReceberMensagemDoCliente implements Runnable{
                                 map = new HashMap<String, String>();
                             }
                         } else {
+                            
                             System.out.println("[CLIENTE] Erro ao receber algum quadro...");
                         }
                     }

@@ -79,6 +79,7 @@ public class EnviarMensagemAoCliente implements Runnable {
                                 ids_Enviados.remove(0);
                             }
                             try { Thread.sleep(10); }catch (InterruptedException ex) { }
+                            
                             //System.out.println("Enviados: "+ids_Enviados.toString());
                             //System.out.println("Recebidos: "+ids_Recebidos.toString());
                         }
@@ -119,7 +120,7 @@ public class EnviarMensagemAoCliente implements Runnable {
             Runnable r = new Runnable() {
                 public void run() {
                     long start_time = System.nanoTime();
-                    while(start_time < System.nanoTime()+Util.TIMEOUT){
+                    while(System.nanoTime() < start_time+Util.TIMEOUT){
                         if(verifica(ids_Recebidos, id))
                             break;
                     }
