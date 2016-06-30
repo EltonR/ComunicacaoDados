@@ -22,6 +22,11 @@ public class EnviarMensagemAoCliente implements Runnable {
 
     public EnviarMensagemAoCliente(Socket soquete) {
         this.soquete = soquete;
+        try {    
+            printWriter = new PrintWriter(new OutputStreamWriter(soquete.getOutputStream()));
+        } catch (IOException ex) {
+            Logger.getLogger(EnviarMensagemAoCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -73,9 +78,12 @@ public class EnviarMensagemAoCliente implements Runnable {
                                 ids_Recebidos.remove(ids_Enviados.get(0));
                                 ids_Enviados.remove(0);
                             }
-                             try { Thread.sleep(10); }catch (InterruptedException ex) { }
+                            try { Thread.sleep(10); }catch (InterruptedException ex) { }
+                            //System.out.println("Enviados: "+ids_Enviados.toString());
+                            //System.out.println("Recebidos: "+ids_Recebidos.toString());
                         }
                         System.out.println("[Servidor] fim da janela...");
+                        
                     }
                 };Thread t = new Thread(janela);t.start();
 
@@ -87,13 +95,12 @@ public class EnviarMensagemAoCliente implements Runnable {
                     try { Thread.sleep(10); }catch (InterruptedException ex) { }
                 }
                 System.out.println("[Servidor] Todos os quadros enviados.");
-                printWriter = new PrintWriter(new OutputStreamWriter(soquete.getOutputStream()));
                 printWriter.println("11111111"); //sinaliza o fim das mensagens
                 printWriter.flush();
                 pronto = true;
             }
         } catch (Exception e) {
-            //e.printStackTrace();
+            System.out.println("Erro 2: "+e.getMessage());
         }
     }
 
@@ -101,7 +108,7 @@ public class EnviarMensagemAoCliente implements Runnable {
         if(pronto)
             return;
         try {
-            printWriter = new PrintWriter(new OutputStreamWriter(soquete.getOutputStream()));
+            
             final String id = quadro.substring(8,12);
             printWriter.flush();
             printWriter.println(quadro);
@@ -125,12 +132,13 @@ public class EnviarMensagemAoCliente implements Runnable {
             Thread t = new Thread(r);
             t.start();
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(EnviarMensagemAoCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     public static void enviarACK(String ACK){
+        System.out.println("[Servidor] enviando ack de confirmacao"+ACK);
         try {
             if (soquete.isConnected()) {
                 printWriter.flush();
@@ -138,7 +146,7 @@ public class EnviarMensagemAoCliente implements Runnable {
                 printWriter.flush();
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("ERRO 01-SOCKET [EnviarMsgToCliente]: "+e.getMessage());
         }
     }
 

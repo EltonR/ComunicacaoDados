@@ -25,7 +25,10 @@ public class ReceberMensagemDoCliente implements Runnable{
             String quadro;
             while (true) {
                 while ((quadro = bufferReader.readLine()) != null) {
-                    if(quadro.equalsIgnoreCase("11111111")){
+                    if(quadro.length()==4){
+                        System.out.println("[Servidor] ack recebido: "+quadro);
+                        posta(quadro);
+                    }else if(quadro.equalsIgnoreCase("11111111")){
                         ordenaMAP();
                         System.out.println("Mensagem: "+s);
                         s="";
@@ -41,7 +44,7 @@ public class ReceberMensagemDoCliente implements Runnable{
                         if (Util.descalculaCRC(quadro).equalsIgnoreCase("0000000000000000")) {
                             if(!map.containsKey(id))
                                 System.out.println("[CLIENTE] Quadro recebido: " + Util.converteBinStr(quadro.substring(0, quadro.length() - 16)));
-                            EnviarMensagemAoServidor.enviarACK(id);
+                            EnviarMensagemAoCliente.enviarACK(id);
                             map.put(id, Util.converteBinStr(quadro.substring(0, quadro.length() - 16)));
                             if (map.size() >= Util.TAMJANELA) {
                                 ordenaMAP();
@@ -69,6 +72,10 @@ public class ReceberMensagemDoCliente implements Runnable{
             ss += map.get(lista.get(i))+" ";
         }
         s+=ss;
+    }
+    
+    private synchronized void posta(String ack){
+        EnviarMensagemAoCliente.ids_Recebidos.add(ack);
     }
     
 }

@@ -26,7 +26,10 @@ public class ReceberMensagemDoServidor implements Runnable {
             bufferReader = new BufferedReader(new InputStreamReader(this.soquete.getInputStream()));//get inputstream
             String quadro = null;
             while ((quadro = bufferReader.readLine()) != null) {
-                if(quadro.equalsIgnoreCase("11111111")){
+                if(quadro.length()==4){
+                    System.out.println("[Cliente] ack recebido: "+quadro);
+                    posta(quadro);
+                }else if(quadro.equalsIgnoreCase("11111111")){
                     ordenaMAP();
                     System.out.println("Mensagem: "+s);
                     s="";
@@ -66,6 +69,10 @@ public class ReceberMensagemDoServidor implements Runnable {
             ss += map.get(lista.get(i))+" ";
         }
         s+=ss;
+    }
+    
+    private synchronized void posta(String ack){
+        EnviarMensagemAoServidor.ids_Recebidos.add(ack);
     }
 
 }

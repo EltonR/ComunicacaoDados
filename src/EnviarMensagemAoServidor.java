@@ -20,8 +20,13 @@ public class EnviarMensagemAoServidor implements Runnable{
     public int fimJanela = 0 + Util.TAMJANELA;
     boolean pronto = false;
 
-    public EnviarMensagemAoServidor(Socket soqueteA) {
-        soquete = soqueteA;
+    public EnviarMensagemAoServidor(Socket soquete) {
+        this.soquete = soquete;
+        try {
+            printWriter = new PrintWriter(new OutputStreamWriter(soquete.getOutputStream()));
+        } catch (IOException ex) {
+            Logger.getLogger(EnviarMensagemAoServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
    @Override
@@ -87,7 +92,7 @@ public class EnviarMensagemAoServidor implements Runnable{
                     try { Thread.sleep(10); }catch (InterruptedException ex) { }
                 }
                 System.out.println("[Cliente] Todos os quadros enviados.");
-                printWriter = new PrintWriter(new OutputStreamWriter(soquete.getOutputStream()));
+                
                 printWriter.println("11111111"); //sinaliza o fim das mensagens
                 printWriter.flush();
                 pronto = true;
@@ -101,7 +106,6 @@ public class EnviarMensagemAoServidor implements Runnable{
         if(pronto)
             return;
         try {
-            printWriter = new PrintWriter(new OutputStreamWriter(soquete.getOutputStream()));
             final String id = quadro.substring(8,12);
             printWriter.flush();
             printWriter.println(quadro);
@@ -125,12 +129,13 @@ public class EnviarMensagemAoServidor implements Runnable{
             Thread t = new Thread(r);
             t.start();
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(EnviarMensagemAoCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     public static void enviarACK(String ACK){
+        System.out.println("[Cliente] enviando ack de confirmacao"+ACK);
         try {
             if (soquete.isConnected()) {
                 printWriter.flush();
@@ -138,7 +143,7 @@ public class EnviarMensagemAoServidor implements Runnable{
                 printWriter.flush();
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("ERRO 01-SOCKET [EnviarMsgToServidor]: "+e.getMessage());
         }
     }
 
