@@ -116,7 +116,7 @@ public class EnviarMensagemAoServidor implements Runnable{
             Runnable r = new Runnable() {
                 public void run() {
                     long start_time = System.nanoTime();
-                    while(start_time < System.nanoTime()+Util.TIMEOUT){
+                   while(System.nanoTime() < start_time+Util.TIMEOUT){
                         if(verifica(ids_Recebidos, id))
                             break;
                     }

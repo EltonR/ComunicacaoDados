@@ -6,9 +6,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class ReceberMensagemDoCliente implements Runnable{
-    Map<String, String> map = new HashMap<String, String>();
+    public static int CENARIO=2; // 0=sem erros; 1=frames perdidos; 2=frames com erro;
+    public static int FREQ=5;
+    int quadrosPerdidos = 0;
+    int quadrosComErro = 0;
+    int totalQuadrosRecebidos =0;
+    int quadrosDuplos =0;
+    Random random;
+    
+    Map<String, String> janela = new HashMap<String, String>();
     String s="";
     
     Socket soquete = null;
@@ -16,6 +25,7 @@ public class ReceberMensagemDoCliente implements Runnable{
 
     public ReceberMensagemDoCliente(Socket clientSocket) {
         this.soquete = clientSocket;
+        random = new Random();
     }
 
     @Override
@@ -31,28 +41,48 @@ public class ReceberMensagemDoCliente implements Runnable{
                     }else if(quadro.equalsIgnoreCase("11111111")){
                         ordenaMAP();
                         System.out.println("Mensagem: "+s);
+                        System.out.println("Quadros perdidos: "+quadrosPerdidos);
+                        System.out.println("Quadros com erro: "+quadrosComErro);
+                        System.out.println("Total de quadros recebidos sem erro: "+totalQuadrosRecebidos);
+                        System.out.println("Total de quadros duplicados: "+quadrosDuplos);
+                        totalQuadrosRecebidos=0;
+                        quadrosDuplos=0;
+                        quadrosComErro=0;
+                        quadrosPerdidos=0;
                         s="";
-                        map = new HashMap<String, String>();
+                        janela = new HashMap<String, String>();
                     }else{
-                        System.out.println("FRAME: " + quadro);
-                        quadro = Util.desflagaMensagem(quadro);
-                        System.out.println("FRAME desflagado: " + quadro);
-                        String id = quadro.substring(0, 4);
-                        quadro = quadro.substring(4);
-                        quadro = Util.desescapaMensagem(quadro);
-                        System.out.println("FRAME desescapado: " + quadro);
-                        if (Util.descalculaCRC(quadro).equalsIgnoreCase("0000000000000000")) {
-                            if(!map.containsKey(id))
-                                System.out.println("[CLIENTE] Quadro recebido: " + Util.converteBinStr(quadro.substring(0, quadro.length() - 16)));
-                            EnviarMensagemAoCliente.enviarACK(id);
-                            map.put(id, Util.converteBinStr(quadro.substring(0, quadro.length() - 16)));
-                            if (map.size() >= Util.TAMJANELA) {
-                                ordenaMAP();
-                                map = new HashMap<String, String>();
+                        int n8 = random.nextInt(FREQ);
+                        if(CENARIO == 1 && n8==0){
+                            System.out.println("QUADRO PERDIDOS>>> "+quadro);
+                            quadrosPerdidos++;
+                        }else{
+                            System.out.println("FRAME: " + quadro);
+                            quadro = Util.desflagaMensagem(quadro);
+                            System.out.println("FRAME desflagado: " + quadro);
+                            String id = quadro.substring(0, 4);
+                            quadro = quadro.substring(4);
+                            quadro = Util.desescapaMensagem(quadro);
+                            System.out.println("FRAME desescapado: " + quadro);
+                            if(CENARIO == 2 && n8==0){
+                                quadro = "101"+quadro;
                             }
-                        } else {
-                            
-                            System.out.println("[CLIENTE] Erro ao receber algum quadro...");
+                            if (Util.descalculaCRC(quadro).equalsIgnoreCase("0000000000000000")) {
+                                if(!janela.containsKey(id))
+                                    System.out.println("[CLIENTE] Quadro recebido: " + Util.converteBinStr(quadro.substring(0, quadro.length() - 16)));
+                                else
+                                    quadrosDuplos++;
+                                totalQuadrosRecebidos++;
+                                EnviarMensagemAoCliente.enviarACK(id);
+                                janela.put(id, Util.converteBinStr(quadro.substring(0, quadro.length() - 16)));
+                                if (janela.size() >= Util.TAMJANELA) {
+                                    ordenaMAP();
+                                    janela = new HashMap<String, String>();
+                                }
+                            } else {
+                                quadrosComErro++;
+                                System.out.println("[CLIENTE] Erro ao receber algum quadro...");
+                            }
                         }
                     }
                 }
@@ -66,11 +96,11 @@ public class ReceberMensagemDoCliente implements Runnable{
     }
     
     private void ordenaMAP() {
-        List lista = new ArrayList(map.keySet());
+        List lista = new ArrayList(janela.keySet());
         Collections.sort(lista);
         String ss = "";
         for(int i=0 ;i<lista.size(); i++){
-            ss += map.get(lista.get(i))+" ";
+            ss += janela.get(lista.get(i))+" ";
         }
         s+=ss;
     }
