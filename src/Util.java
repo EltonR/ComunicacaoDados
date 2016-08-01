@@ -11,9 +11,6 @@ public class Util {
     final public static int TIMEOUT = 10000000;
     
 
-    public static void main(String[] args) {
-        
-    }
     
     public static String calculaCRC(String s){
         

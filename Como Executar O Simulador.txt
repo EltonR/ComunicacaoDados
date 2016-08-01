@@ -1,0 +1,5 @@
+Nas classes "ReceberMensagem..." há uma variável "CENÁRIO" que deve ser definida antes da execução.
+Rodar primeiro o Servidor, seguido do cliente.
+
+
+
