@@ -1,5 +1,6 @@
-Nas classes "ReceberMensagem..." h· uma vari·vel "CEN¡RIO" que deve ser definida antes da execuÁ„o.
+Nas classes "ReceberMensagem..." h√° uma vari√°vel "CEN√ÅRIO" que deve ser definida antes da execu√ß√£o.
 Rodar primeiro o Servidor, seguido do cliente.
 
-
+HOW TO RUN: There is a "ReceberMensagem" class, with a "CEN√ÅRIO" variable, which should be defined before the execution.
+First run "Servidor", then "Cliente".
 
